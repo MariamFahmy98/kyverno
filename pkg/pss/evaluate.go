@@ -84,7 +84,7 @@ func exemptKyvernoExclusion(defaultCheckResults, excludeCheckResults []pssutils.
 	return newDefaultCheckResults
 }
 
-func parseVersion(rule *kyvernov1.PodSecurity) (*api.LevelVersion, error) {
+func ParseVersion(rule *kyvernov1.PodSecurity) (*api.LevelVersion, error) {
 	// Get pod security admission version
 	var apiVersion api.Version
 
@@ -105,26 +105,21 @@ func parseVersion(rule *kyvernov1.PodSecurity) (*api.LevelVersion, error) {
 }
 
 // EvaluatePod applies PSS checks to the pod and exempts controls specified in the rule
-func EvaluatePod(rule *kyvernov1.PodSecurity, pod *corev1.Pod) (bool, []pssutils.PSSCheckResult, error) {
-	levelVersion, err := parseVersion(rule)
-	if err != nil {
-		return false, nil, err
-	}
+func EvaluatePod(level *api.LevelVersion, pod *corev1.Pod, excludedControls []kyvernov1.PodSecurityStandard) (bool, []pssutils.PSSCheckResult, error) {
+	defaultCheckResults := evaluatePSS(level, *pod)
 
-	defaultCheckResults := evaluatePSS(levelVersion, *pod)
-
-	for _, exclude := range rule.Exclude {
+	for _, exclude := range excludedControls {
 		spec, matching := GetPodWithMatchingContainers(exclude, pod)
 
 		switch {
 		// exclude pod level checks
 		case spec != nil:
-			excludeCheckResults := evaluatePSS(levelVersion, *spec)
+			excludeCheckResults := evaluatePSS(level, *spec)
 			defaultCheckResults = exemptKyvernoExclusion(defaultCheckResults, excludeCheckResults, exclude)
 
 		// exclude container level checks
 		default:
-			excludeCheckResults := evaluatePSS(levelVersion, *matching)
+			excludeCheckResults := evaluatePSS(level, *matching)
 			defaultCheckResults = exemptKyvernoExclusion(defaultCheckResults, excludeCheckResults, exclude)
 		}
 	}

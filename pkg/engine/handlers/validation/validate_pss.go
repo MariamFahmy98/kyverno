@@ -33,6 +33,10 @@ func (h validatePssHandler) Process(
 ) (unstructured.Unstructured, []engineapi.RuleResponse) {
 	// Marshal pod metadata and spec
 	podSecurity := rule.Validation.PodSecurity
+	levelVersion, err := pss.ParseVersion(podSecurity)
+	if err != nil {
+		return resource, handlers.WithError(rule, engineapi.Validation, "Error while parsing the version", err)
+	}
 	if resource.Object == nil {
 		resource = policyContext.OldResource()
 	}
@@ -44,7 +48,7 @@ func (h validatePssHandler) Process(
 		Spec:       *podSpec,
 		ObjectMeta: *metadata,
 	}
-	allowed, pssChecks, err := pss.EvaluatePod(podSecurity, pod)
+	allowed, pssChecks, err := pss.EvaluatePod(levelVersion, pod, podSecurity.Exclude)
 	if err != nil {
 		return resource, handlers.WithError(rule, engineapi.Validation, "failed to parse pod security api version", err)
 	}

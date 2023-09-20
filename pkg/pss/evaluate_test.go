@@ -46,7 +46,9 @@ func Test_EvaluatePod(t *testing.T) {
 		err = json.Unmarshal(test.rawRule, &rule)
 		assert.NilError(t, err)
 
-		allowed, checkResults, err := EvaluatePod(&rule, &pod)
+		level, err := ParseVersion(&rule)
+		assert.NilError(t, err)
+		allowed, checkResults, err := EvaluatePod(level, &pod, rule.Exclude)
 		assert.Assert(t, err == nil)
 
 		if allowed != test.allowed {
