@@ -500,7 +500,7 @@ codegen-crds-cli: $(CONTROLLER_GEN) ## Generate policy reports CRDs
 	@$(CONTROLLER_GEN) crd paths=./cmd/cli/kubectl-kyverno/apis/... crd:crdVersions=v1 output:dir=${PWD}/cmd/cli/kubectl-kyverno/config/crds
 
 .PHONY: codegen-crds-all
-codegen-crds-all: codegen-crds-kyverno codegen-crds-report ## Generate all CRDs
+codegen-crds-all: codegen-crds-kyverno codegen-crds-report codegen-crds-cli ## Generate all CRDs
 
 .PHONY: codegen-helm-docs
 codegen-helm-docs: ## Generate helm docs
