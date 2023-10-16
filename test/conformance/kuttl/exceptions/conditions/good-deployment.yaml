@@ -1,19 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: three-containers-deployment
+  name: good-deployment
   labels:
-    app: my-app
     color: blue
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: my-app
+      color: blue
   template:
     metadata:
       labels:
-        app: my-app
         color: blue
     spec:
       containers:
