@@ -3,7 +3,6 @@ package v2
 import (
 	"testing"
 
-	kyvernov2beta1 "github.com/kyverno/kyverno/api/kyverno/v2beta1"
 	"gotest.tools/assert"
 	apiextv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"k8s.io/apimachinery/pkg/util/validation/field"
@@ -14,8 +13,8 @@ func Test_Validate_UniqueRuleName(t *testing.T) {
 		Rules: []Rule{{
 			Name: "deny-privileged-disallowpriviligedescalation",
 			MatchResources: MatchResources{
-				Any: kyvernov2beta1.ResourceFilters{{
-					ResourceDescription: kyvernov2beta1.ResourceDescription{
+				Any: ResourceFilters{{
+					ResourceDescription: ResourceDescription{
 						Kinds: []string{
 							"Pod",
 						},
@@ -31,8 +30,8 @@ func Test_Validate_UniqueRuleName(t *testing.T) {
 		}, {
 			Name: "deny-privileged-disallowpriviligedescalation",
 			MatchResources: MatchResources{
-				Any: kyvernov2beta1.ResourceFilters{{
-					ResourceDescription: kyvernov2beta1.ResourceDescription{
+				Any: ResourceFilters{{
+					ResourceDescription: ResourceDescription{
 						Kinds: []string{
 							"Pod",
 						},

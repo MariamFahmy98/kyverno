@@ -23,6 +23,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// +k8s:conversion-gen=false
 // UpdateRequestStatus defines the observed state of UpdateRequest
 type UpdateRequestStatus struct {
 	// State represents state of the update request.
@@ -41,6 +42,7 @@ type UpdateRequestStatus struct {
 
 // +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +k8s:conversion-gen=false
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Policy",type="string",JSONPath=".spec.policy"
@@ -72,6 +74,7 @@ const (
 	Generate RequestType = "generate"
 )
 
+// +k8s:conversion-gen=false
 // UpdateRequestSpec stores the request specification.
 type UpdateRequestSpec struct {
 	// Type represents request type for background processing
@@ -98,6 +101,7 @@ type UpdateRequestSpec struct {
 	Context UpdateRequestSpecContext `json:"context" yaml:"context"`
 }
 
+// +k8s:conversion-gen=false
 // UpdateRequestSpecContext stores the context to be shared.
 type UpdateRequestSpecContext struct {
 	// +optional
@@ -106,6 +110,7 @@ type UpdateRequestSpecContext struct {
 	AdmissionRequestInfo AdmissionRequestInfoObject `json:"admissionRequestInfo,omitempty" yaml:"admissionRequestInfo,omitempty"`
 }
 
+// +k8s:conversion-gen=false
 // RequestInfo contains permission info carried in an admission request.
 type RequestInfo struct {
 	// Roles is a list of possible role send the request.
@@ -123,6 +128,7 @@ type RequestInfo struct {
 	AdmissionUserInfo authenticationv1.UserInfo `json:"userInfo" yaml:"userInfo"`
 }
 
+// +k8s:conversion-gen=false
 // AdmissionRequestInfoObject stores the admission request and operation details
 type AdmissionRequestInfoObject struct {
 	// +optional
@@ -149,6 +155,7 @@ const (
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +k8s:conversion-gen=false
 // +kubebuilder:object:root=true
 
 // UpdateRequestList contains a list of UpdateRequest

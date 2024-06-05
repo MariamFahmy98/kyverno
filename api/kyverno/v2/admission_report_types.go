@@ -21,6 +21,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// +k8s:conversion-gen=false
 type AdmissionReportSpec struct {
 	// Owner is a reference to the report owner (e.g. a Deployment, Namespace, or Node)
 	Owner metav1.OwnerReference `json:"owner"`
@@ -36,6 +37,7 @@ type AdmissionReportSpec struct {
 
 // +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +k8s:conversion-gen=false
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:shortName=admr,categories=kyverno
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
@@ -70,6 +72,7 @@ func (r *AdmissionReport) SetSummary(summary policyreportv1alpha2.PolicyReportSu
 // +genclient
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +k8s:conversion-gen=false
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:scope=Cluster,shortName=cadmr,categories=kyverno
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
@@ -103,6 +106,7 @@ func (r *ClusterAdmissionReport) SetSummary(summary policyreportv1alpha2.PolicyR
 
 // +kubebuilder:object:root=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +k8s:conversion-gen=false
 
 // AdmissionReportList contains a list of AdmissionReport
 type AdmissionReportList struct {
@@ -113,6 +117,7 @@ type AdmissionReportList struct {
 
 // +kubebuilder:object:root=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +k8s:conversion-gen=false
 
 // ClusterAdmissionReportList contains a list of ClusterAdmissionReport
 type ClusterAdmissionReportList struct {

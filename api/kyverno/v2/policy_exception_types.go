@@ -26,6 +26,7 @@ import (
 // +genclient
 // +kubebuilder:object:root=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +k8s:conversion-gen=false
 // +kubebuilder:resource:shortName=polex,categories=kyverno
 
 // PolicyException declares resources to be excluded from specified policies.
@@ -56,6 +57,8 @@ func (p *PolicyException) GetKind() string {
 func (p *PolicyException) HasPodSecurity() bool {
 	return len(p.Spec.PodSecurity) > 0
 }
+
+// +k8s:conversion-gen=false
 
 // PolicyExceptionSpec stores policy exception spec
 type PolicyExceptionSpec struct {
@@ -113,6 +116,8 @@ func (p *PolicyExceptionSpec) Contains(policy string, rule string) bool {
 	return false
 }
 
+// +k8s:conversion-gen=false
+
 // Exception stores infos about a policy and rules
 type Exception struct {
 	// PolicyName identifies the policy to which the exception is applied.
@@ -146,6 +151,7 @@ func (p *Exception) Contains(policy string, rule string) bool {
 
 // +kubebuilder:object:root=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +k8s:conversion-gen=false
 
 // PolicyExceptionList is a list of Policy Exceptions
 type PolicyExceptionList struct {

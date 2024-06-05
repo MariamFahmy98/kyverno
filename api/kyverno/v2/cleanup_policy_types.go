@@ -30,6 +30,7 @@ import (
 
 // +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +k8s:conversion-gen=false
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:shortName=cleanpol,categories=kyverno
 // +kubebuilder:subresource:status
@@ -104,6 +105,7 @@ func (p *CleanupPolicy) IsNamespaced() bool {
 
 // +kubebuilder:object:root=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +k8s:conversion-gen=false
 
 // CleanupPolicyList is a list of ClusterPolicy instances.
 type CleanupPolicyList struct {
@@ -115,6 +117,7 @@ type CleanupPolicyList struct {
 // +genclient
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +k8s:conversion-gen=false
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:scope=Cluster,shortName=ccleanpol,categories=kyverno
 // +kubebuilder:subresource:status
@@ -189,6 +192,7 @@ func (p *ClusterCleanupPolicy) Validate(clusterResources sets.Set[string]) (errs
 
 // +kubebuilder:object:root=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +k8s:conversion-gen=false
 
 // ClusterCleanupPolicyList is a list of ClusterCleanupPolicy instances.
 type ClusterCleanupPolicyList struct {
@@ -196,6 +200,8 @@ type ClusterCleanupPolicyList struct {
 	metav1.ListMeta `json:"metadata"`
 	Items           []ClusterCleanupPolicy `json:"items"`
 }
+
+// +k8s:conversion-gen=false
 
 // CleanupPolicySpec stores specifications for selecting resources that the user needs to delete
 // and schedule when the matching resources needs deleted.
@@ -223,6 +229,8 @@ type CleanupPolicySpec struct {
 	// +optional
 	Conditions *AnyAllConditions `json:"conditions,omitempty"`
 }
+
+// +k8s:conversion-gen=false
 
 // CleanupPolicyStatus stores the status of the policy.
 type CleanupPolicyStatus struct {

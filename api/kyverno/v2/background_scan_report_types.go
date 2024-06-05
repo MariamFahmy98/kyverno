@@ -21,6 +21,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// +k8s:conversion-gen=false
 type BackgroundScanReportSpec struct {
 	// PolicyReportSummary provides a summary of results
 	// +optional
@@ -33,6 +34,7 @@ type BackgroundScanReportSpec struct {
 
 // +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +k8s:conversion-gen=false
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:shortName=bgscanr,categories=kyverno
 // +kubebuilder:printcolumn:name="ApiVersion",type=string,JSONPath=".metadata.ownerReferences[0].apiVersion"
@@ -68,6 +70,7 @@ func (r *BackgroundScanReport) SetSummary(summary policyreportv1alpha2.PolicyRep
 // +genclient
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +k8s:conversion-gen=false
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:scope=Cluster,shortName=cbgscanr,categories=kyverno
 // +kubebuilder:printcolumn:name="ApiVersion",type=string,JSONPath=".metadata.ownerReferences[0].apiVersion"
@@ -102,6 +105,7 @@ func (r *ClusterBackgroundScanReport) SetSummary(summary policyreportv1alpha2.Po
 
 // +kubebuilder:object:root=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +k8s:conversion-gen=false
 
 // BackgroundScanReportList contains a list of BackgroundScanReport
 type BackgroundScanReportList struct {
@@ -112,6 +116,7 @@ type BackgroundScanReportList struct {
 
 // +kubebuilder:object:root=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +k8s:conversion-gen=false
 
 // ClusterBackgroundScanReportList contains a list of ClusterBackgroundScanReport
 type ClusterBackgroundScanReportList struct {

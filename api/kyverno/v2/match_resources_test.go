@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
-	kyvernov2beta1 "github.com/kyverno/kyverno/api/kyverno/v2beta1"
 	"gotest.tools/assert"
 	rbacv1 "k8s.io/api/rbac/v1"
 	"k8s.io/apimachinery/pkg/util/validation/field"
@@ -20,7 +19,7 @@ func Test_MatchResources(t *testing.T) {
 		name:       "valid",
 		namespaced: true,
 		subject: MatchResources{
-			Any: kyvernov2beta1.ResourceFilters{{
+			Any: ResourceFilters{{
 				UserInfo: kyvernov1.UserInfo{
 					Subjects: []rbacv1.Subject{{
 						Kind:      "ServiceAccount",
@@ -34,7 +33,7 @@ func Test_MatchResources(t *testing.T) {
 		name:       "any-all",
 		namespaced: true,
 		subject: MatchResources{
-			Any: kyvernov2beta1.ResourceFilters{{
+			Any: ResourceFilters{{
 				UserInfo: kyvernov1.UserInfo{
 					Subjects: []rbacv1.Subject{{
 						Kind:      "ServiceAccount",
@@ -43,7 +42,7 @@ func Test_MatchResources(t *testing.T) {
 					}},
 				},
 			}},
-			All: kyvernov2beta1.ResourceFilters{{
+			All: ResourceFilters{{
 				UserInfo: kyvernov1.UserInfo{
 					Subjects: []rbacv1.Subject{{
 						Kind:      "ServiceAccount",

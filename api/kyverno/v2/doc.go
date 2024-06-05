@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 // +k8s:deepcopy-gen=package
+// +k8s:conversion-gen=github.com/kyverno/kyverno/api/kyverno/v1
 // +kubebuilder:object:generate=true
 // +groupName=kyverno.io
 package v2
