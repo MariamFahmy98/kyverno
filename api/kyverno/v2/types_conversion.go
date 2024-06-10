@@ -5,6 +5,7 @@ import (
 	unsafe "unsafe"
 
 	kyvernov1 "github.com/kyverno/kyverno/api/kyverno/v1"
+	conversionutils "github.com/kyverno/kyverno/pkg/utils/conversion"
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	apiconversion "k8s.io/apimachinery/pkg/conversion"
@@ -14,13 +15,67 @@ import (
 func (src *ClusterPolicy) ConvertTo(dstRaw conversion.Hub) error {
 	dst := dstRaw.(*kyvernov1.ClusterPolicy)
 
-	return Convert_v2_ClusterPolicy_To_v1_ClusterPolicy(src, dst, nil)
+	if err := Convert_v2_ClusterPolicy_To_v1_ClusterPolicy(src, dst, nil); err != nil {
+		return err
+	}
+
+	// Manually restore data.
+	restored := &kyvernov1.ClusterPolicy{}
+	if ok, err := conversionutils.UnmarshalData(src, restored); err != nil || !ok {
+		return err
+	}
+
+	dst.Spec.GenerateExistingOnPolicyUpdate = restored.Spec.GenerateExistingOnPolicyUpdate
+	dst.Spec.SchemaValidation = restored.Spec.SchemaValidation
+
+	for r, rule := range restored.Spec.Rules {
+		for i, image := range rule.VerifyImages {
+			if image.Image != "" {
+				dst.Spec.Rules[r].VerifyImages[i].Image = image.Image
+			}
+			if image.Key != "" {
+				dst.Spec.Rules[r].VerifyImages[i].Key = image.Key
+			}
+			if image.Roots != "" {
+				dst.Spec.Rules[r].VerifyImages[i].Roots = image.Roots
+			}
+			if image.Subject != "" {
+				dst.Spec.Rules[r].VerifyImages[i].Subject = image.Subject
+			}
+			if image.Issuer != "" {
+				dst.Spec.Rules[r].VerifyImages[i].Issuer = image.Issuer
+			}
+			if len(image.AdditionalExtensions) != 0 {
+				dst.Spec.Rules[r].VerifyImages[i].AdditionalExtensions = image.AdditionalExtensions
+			}
+			if len(image.Annotations) != 0 {
+				dst.Spec.Rules[r].VerifyImages[i].Annotations = image.Annotations
+			}
+
+			for a, attestation := range image.Attestations {
+				if attestation.PredicateType != "" {
+					dst.Spec.Rules[r].VerifyImages[i].Attestations[a].PredicateType = attestation.PredicateType
+				}
+			}
+		}
+	}
+
+	return nil
 }
 
 func (dst *ClusterPolicy) ConvertFrom(srcRaw conversion.Hub) error {
 	src := srcRaw.(*kyvernov1.ClusterPolicy)
 
-	return Convert_v1_ClusterPolicy_To_v2_ClusterPolicy(src, dst, nil)
+	if err := Convert_v1_ClusterPolicy_To_v2_ClusterPolicy(src, dst, nil); err != nil {
+		return err
+	}
+
+	// Preserve Hub data on down-conversion except for metadata
+	if err := conversionutils.MarshalData(src, dst); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (src *ClusterPolicyList) ConvertTo(dstRaw conversion.Hub) error {
@@ -121,8 +176,8 @@ func Convert_v1_Spec_To_v2_Spec(in *kyvernov1.Spec, out *Spec, s apiconversion.S
 
 func autoConvert_v1_ImageVerification_To_v2_ImageVerification(in *kyvernov1.ImageVerification, out *ImageVerification, s apiconversion.Scope) error {
 	out.Type = kyvernov1.ImageVerificationType(in.Type)
-	// WARNING: in.Image requires manual conversion: does not exist in peer-type
 	out.ImageReferences = *(*[]string)(unsafe.Pointer(&in.ImageReferences))
+	out.ImageReferences = append(out.ImageReferences, in.Image)
 	out.SkipImageReferences = *(*[]string)(unsafe.Pointer(&in.SkipImageReferences))
 	// WARNING: in.Key requires manual conversion: does not exist in peer-type
 	// WARNING: in.Roots requires manual conversion: does not exist in peer-type
@@ -130,16 +185,35 @@ func autoConvert_v1_ImageVerification_To_v2_ImageVerification(in *kyvernov1.Imag
 	// WARNING: in.Issuer requires manual conversion: does not exist in peer-type
 	// WARNING: in.AdditionalExtensions requires manual conversion: does not exist in peer-type
 	out.Attestors = *(*[]kyvernov1.AttestorSet)(unsafe.Pointer(&in.Attestors))
-	if in.Attestations != nil {
-		in, out := &in.Attestations, &out.Attestations
-		*out = make([]Attestation, len(*in))
-		for i := range *in {
-			if err := Convert_v1_Attestation_To_v2_Attestation(&(*in)[i], &(*out)[i], s); err != nil {
-				return err
+	for _, attestation := range in.Attestations {
+		var v2Attestation Attestation
+		if err := Convert_v1_Attestation_To_v2_Attestation(&attestation, &v2Attestation, s); err != nil {
+			return err
+		}
+		for _, attestor := range v2Attestation.Attestors {
+			for _, entry := range attestor.Entries {
+				if in.Key != "" {
+					entry.Keys = &kyvernov1.StaticKeyAttestor{
+						PublicKeys: in.Key,
+					}
+				}
+				var keyless *kyvernov1.KeylessAttestor
+				if in.Roots != "" {
+					keyless.Roots = in.Roots
+				}
+				if in.Subject != "" {
+					keyless.Subject = in.Subject
+				}
+				if in.Issuer != "" {
+					keyless.Issuer = in.Issuer
+				}
+				if len(in.AdditionalExtensions) != 0 {
+					keyless.AdditionalExtensions = in.AdditionalExtensions
+				}
+				entry.Keyless = keyless
 			}
 		}
-	} else {
-		out.Attestations = nil
+		out.Attestations = append(out.Attestations, v2Attestation)
 	}
 	// WARNING: in.Annotations requires manual conversion: does not exist in peer-type
 	out.Repository = in.Repository
@@ -419,8 +493,11 @@ func Convert_v2_Generation_To_v1_Generation(in *Generation, out *kyvernov1.Gener
 }
 
 func autoConvert_v1_Attestation_To_v2_Attestation(in *kyvernov1.Attestation, out *Attestation, _ apiconversion.Scope) error {
-	// WARNING: in.PredicateType requires manual conversion: does not exist in peer-type
-	out.Type = in.Type
+	if in.PredicateType != "" {
+		out.Type = in.PredicateType
+	} else {
+		out.Type = in.Type
+	}
 	out.Attestors = *(*[]kyvernov1.AttestorSet)(unsafe.Pointer(&in.Attestors))
 	out.Conditions = *(*[]AnyAllConditions)(unsafe.Pointer(&in.Conditions))
 	return nil
@@ -443,7 +520,18 @@ func Convert_v2_Attestation_To_v1_Attestation(in *Attestation, out *kyvernov1.At
 }
 
 func Convert_v1_JSON_To_v2_AnyAllConditions(in *apiextensionsv1.JSON, out *AnyAllConditions, s apiconversion.Scope) error {
-	return json.Unmarshal(in.Raw, out)
+	// In case conditions are specified under any/all resource filters
+	if err := json.Unmarshal(in.Raw, out); err == nil {
+		return nil
+	}
+
+	// In case conditions aren't specified under any/all resource filters
+	var conditions []Condition
+	if err := json.Unmarshal(in.Raw, &conditions); err == nil {
+		out.AnyConditions = conditions
+		return nil
+	}
+	return nil
 }
 
 func Convert_v2_AnyAllConditions_To_v1_JSON(in *AnyAllConditions, out *apiextensionsv1.JSON, s apiconversion.Scope) error {

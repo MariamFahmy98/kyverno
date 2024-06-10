@@ -97,11 +97,6 @@ func main() {
 	// informer factories
 	kubeInformer := kubeinformers.NewSharedInformerFactoryWithOptions(setup.KubeClient, resyncPeriod)
 	kyvernoInformer := kyvernoinformer.NewSharedInformerFactory(setup.KyvernoClient, resyncPeriod)
-	var wg sync.WaitGroup
-	// start informers and wait for cache sync
-	if !internal.StartInformersAndWaitForCacheSync(ctx, setup.Logger, kubeInformer, kyvernoInformer) {
-		os.Exit(1)
-	}
 	// controllers
 	renewer := tlsutils.NewCertRenewer(
 		setup.KubeClient.CoreV1().Secrets(config.KyvernoNamespace()),
@@ -140,6 +135,11 @@ func main() {
 		),
 		conversionwebhook.Workers,
 	)
+	// start informers and wait for cache sync
+	if !internal.StartInformersAndWaitForCacheSync(ctx, setup.Logger, kubeInformer, kyvernoInformer) {
+		os.Exit(1)
+	}
+	var wg sync.WaitGroup
 	certController.Run(ctx, setup.Logger, &wg)
 	crdConversionWebhookController.Run(ctx, setup.Logger, &wg)
 	// create server
@@ -221,6 +221,4 @@ func main() {
 		setup.Logger.Error(err, "problem running manager")
 		os.Exit(1)
 	}
-	// wait for everything to shut down and exit
-	wg.Wait()
 }
