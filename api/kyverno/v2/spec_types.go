@@ -8,6 +8,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation/field"
 )
 
+// +k8s:conversion-gen=false
 // Spec contains a list of Rule instances and other policy controls.
 type Spec struct {
 	// Rules is a list of Rule instances. A Policy contains multiple rules and

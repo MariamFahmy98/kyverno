@@ -26,8 +26,8 @@ import (
 
 	v1 "github.com/kyverno/kyverno/api/kyverno/v1"
 	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
+	v1alpha1 "k8s.io/api/admissionregistration/v1alpha1"
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	conversion "k8s.io/apimachinery/pkg/conversion"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
@@ -46,11 +46,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddGeneratedConversionFunc((*v1.AnyAllConditions)(nil), (*AnyAllConditions)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1_AnyAllConditions_To_v2_AnyAllConditions(a.(*v1.AnyAllConditions), b.(*AnyAllConditions), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*Attestation)(nil), (*v1.Attestation)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v2_Attestation_To_v1_Attestation(a.(*Attestation), b.(*v1.Attestation), scope)
 	}); err != nil {
 		return err
 	}
@@ -84,23 +79,13 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
-	if err := s.AddGeneratedConversionFunc((*v1.Generation)(nil), (*Generation)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1_Generation_To_v2_Generation(a.(*v1.Generation), b.(*Generation), scope)
+	if err := s.AddGeneratedConversionFunc((*Deny)(nil), (*v1.Deny)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v2_Deny_To_v1_Deny(a.(*Deny), b.(*v1.Deny), scope)
 	}); err != nil {
 		return err
 	}
-	if err := s.AddGeneratedConversionFunc((*ImageVerification)(nil), (*v1.ImageVerification)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v2_ImageVerification_To_v1_ImageVerification(a.(*ImageVerification), b.(*v1.ImageVerification), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*MatchResources)(nil), (*v1.MatchResources)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v2_MatchResources_To_v1_MatchResources(a.(*MatchResources), b.(*v1.MatchResources), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*v1.Mutation)(nil), (*Mutation)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1_Mutation_To_v2_Mutation(a.(*v1.Mutation), b.(*Mutation), scope)
+	if err := s.AddGeneratedConversionFunc((*v1.Deny)(nil), (*Deny)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_Deny_To_v2_Deny(a.(*v1.Deny), b.(*Deny), scope)
 	}); err != nil {
 		return err
 	}
@@ -124,11 +109,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
-	if err := s.AddGeneratedConversionFunc((*ResourceDescription)(nil), (*v1.ResourceDescription)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v2_ResourceDescription_To_v1_ResourceDescription(a.(*ResourceDescription), b.(*v1.ResourceDescription), scope)
-	}); err != nil {
-		return err
-	}
 	if err := s.AddGeneratedConversionFunc((*ResourceFilter)(nil), (*v1.ResourceFilter)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v2_ResourceFilter_To_v1_ResourceFilter(a.(*ResourceFilter), b.(*v1.ResourceFilter), scope)
 	}); err != nil {
@@ -139,8 +119,23 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
-	if err := s.AddGeneratedConversionFunc((*v1.Validation)(nil), (*Validation)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1_Validation_To_v2_Validation(a.(*v1.Validation), b.(*Validation), scope)
+	if err := s.AddGeneratedConversionFunc((*Rule)(nil), (*v1.Rule)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v2_Rule_To_v1_Rule(a.(*Rule), b.(*v1.Rule), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.Rule)(nil), (*Rule)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_Rule_To_v2_Rule(a.(*v1.Rule), b.(*Rule), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*TargetResourceSpec)(nil), (*v1.TargetResourceSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v2_TargetResourceSpec_To_v1_TargetResourceSpec(a.(*TargetResourceSpec), b.(*v1.TargetResourceSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.TargetResourceSpec)(nil), (*TargetResourceSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_TargetResourceSpec_To_v2_TargetResourceSpec(a.(*v1.TargetResourceSpec), b.(*TargetResourceSpec), scope)
 	}); err != nil {
 		return err
 	}
@@ -159,8 +154,8 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
-	if err := s.AddConversionFunc((*v1.Deny)(nil), (*Deny)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1_Deny_To_v2_Deny(a.(*v1.Deny), b.(*Deny), scope)
+	if err := s.AddConversionFunc((*v1.Generation)(nil), (*Generation)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_Generation_To_v2_Generation(a.(*v1.Generation), b.(*Generation), scope)
 	}); err != nil {
 		return err
 	}
@@ -169,8 +164,18 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
+	if err := s.AddConversionFunc((*apiextensionsv1.JSON)(nil), (*AnyAllConditions)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_JSON_To_v2_AnyAllConditions(a.(*apiextensionsv1.JSON), b.(*AnyAllConditions), scope)
+	}); err != nil {
+		return err
+	}
 	if err := s.AddConversionFunc((*v1.MatchResources)(nil), (*MatchResources)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1_MatchResources_To_v2_MatchResources(a.(*v1.MatchResources), b.(*MatchResources), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*v1.Mutation)(nil), (*Mutation)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_Mutation_To_v2_Mutation(a.(*v1.Mutation), b.(*Mutation), scope)
 	}); err != nil {
 		return err
 	}
@@ -179,23 +184,23 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
-	if err := s.AddConversionFunc((*v1.Rule)(nil), (*Rule)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1_Rule_To_v2_Rule(a.(*v1.Rule), b.(*Rule), scope)
-	}); err != nil {
-		return err
-	}
 	if err := s.AddConversionFunc((*v1.Spec)(nil), (*Spec)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1_Spec_To_v2_Spec(a.(*v1.Spec), b.(*Spec), scope)
 	}); err != nil {
 		return err
 	}
-	if err := s.AddConversionFunc((*v1.TargetResourceSpec)(nil), (*TargetResourceSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1_TargetResourceSpec_To_v2_TargetResourceSpec(a.(*v1.TargetResourceSpec), b.(*TargetResourceSpec), scope)
+	if err := s.AddConversionFunc((*v1.Validation)(nil), (*Validation)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_Validation_To_v2_Validation(a.(*v1.Validation), b.(*Validation), scope)
 	}); err != nil {
 		return err
 	}
-	if err := s.AddConversionFunc((*Deny)(nil), (*v1.Deny)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v2_Deny_To_v1_Deny(a.(*Deny), b.(*v1.Deny), scope)
+	if err := s.AddConversionFunc((*AnyAllConditions)(nil), (*apiextensionsv1.JSON)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v2_AnyAllConditions_To_v1_JSON(a.(*AnyAllConditions), b.(*apiextensionsv1.JSON), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*Attestation)(nil), (*v1.Attestation)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v2_Attestation_To_v1_Attestation(a.(*Attestation), b.(*v1.Attestation), scope)
 	}); err != nil {
 		return err
 	}
@@ -204,23 +209,28 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
+	if err := s.AddConversionFunc((*ImageVerification)(nil), (*v1.ImageVerification)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v2_ImageVerification_To_v1_ImageVerification(a.(*ImageVerification), b.(*v1.ImageVerification), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*MatchResources)(nil), (*v1.MatchResources)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v2_MatchResources_To_v1_MatchResources(a.(*MatchResources), b.(*v1.MatchResources), scope)
+	}); err != nil {
+		return err
+	}
 	if err := s.AddConversionFunc((*Mutation)(nil), (*v1.Mutation)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v2_Mutation_To_v1_Mutation(a.(*Mutation), b.(*v1.Mutation), scope)
 	}); err != nil {
 		return err
 	}
-	if err := s.AddConversionFunc((*Rule)(nil), (*v1.Rule)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v2_Rule_To_v1_Rule(a.(*Rule), b.(*v1.Rule), scope)
+	if err := s.AddConversionFunc((*ResourceDescription)(nil), (*v1.ResourceDescription)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v2_ResourceDescription_To_v1_ResourceDescription(a.(*ResourceDescription), b.(*v1.ResourceDescription), scope)
 	}); err != nil {
 		return err
 	}
 	if err := s.AddConversionFunc((*Spec)(nil), (*v1.Spec)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v2_Spec_To_v1_Spec(a.(*Spec), b.(*v1.Spec), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddConversionFunc((*TargetResourceSpec)(nil), (*v1.TargetResourceSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v2_TargetResourceSpec_To_v1_TargetResourceSpec(a.(*TargetResourceSpec), b.(*v1.TargetResourceSpec), scope)
 	}); err != nil {
 		return err
 	}
@@ -252,26 +262,6 @@ func autoConvert_v1_AnyAllConditions_To_v2_AnyAllConditions(in *v1.AnyAllConditi
 // Convert_v1_AnyAllConditions_To_v2_AnyAllConditions is an autogenerated conversion function.
 func Convert_v1_AnyAllConditions_To_v2_AnyAllConditions(in *v1.AnyAllConditions, out *AnyAllConditions, s conversion.Scope) error {
 	return autoConvert_v1_AnyAllConditions_To_v2_AnyAllConditions(in, out, s)
-}
-
-func autoConvert_v2_Attestation_To_v1_Attestation(in *Attestation, out *v1.Attestation, s conversion.Scope) error {
-	out.Type = in.Type
-	out.Attestors = *(*[]v1.AttestorSet)(unsafe.Pointer(&in.Attestors))
-	out.Conditions = *(*[]v1.AnyAllConditions)(unsafe.Pointer(&in.Conditions))
-	return nil
-}
-
-// Convert_v2_Attestation_To_v1_Attestation is an autogenerated conversion function.
-func Convert_v2_Attestation_To_v1_Attestation(in *Attestation, out *v1.Attestation, s conversion.Scope) error {
-	return autoConvert_v2_Attestation_To_v1_Attestation(in, out, s)
-}
-
-func autoConvert_v1_Attestation_To_v2_Attestation(in *v1.Attestation, out *Attestation, s conversion.Scope) error {
-	// WARNING: in.PredicateType requires manual conversion: does not exist in peer-type
-	out.Type = in.Type
-	out.Attestors = *(*[]v1.AttestorSet)(unsafe.Pointer(&in.Attestors))
-	out.Conditions = *(*[]AnyAllConditions)(unsafe.Pointer(&in.Conditions))
-	return nil
 }
 
 func autoConvert_v2_ClusterPolicy_To_v1_ClusterPolicy(in *ClusterPolicy, out *v1.ClusterPolicy, s conversion.Scope) error {
@@ -370,193 +360,40 @@ func Convert_v1_Condition_To_v2_Condition(in *v1.Condition, out *Condition, s co
 	return autoConvert_v1_Condition_To_v2_Condition(in, out, s)
 }
 
-func autoConvert_v2_Generation_To_v1_Generation(in *Generation, out *v1.Generation, s conversion.Scope) error {
-	out.ResourceSpec = in.ResourceSpec
-	// WARNING: in.GenerateExisting requires manual conversion: does not exist in peer-type
-	out.Synchronize = in.Synchronize
-	out.OrphanDownstreamOnPolicyDelete = in.OrphanDownstreamOnPolicyDelete
-	out.RawData = (*apiextensionsv1.JSON)(unsafe.Pointer(in.RawData))
-	out.Clone = in.Clone
-	out.CloneList = in.CloneList
-	return nil
-}
-
-func autoConvert_v1_Generation_To_v2_Generation(in *v1.Generation, out *Generation, s conversion.Scope) error {
-	out.ResourceSpec = in.ResourceSpec
-	out.Synchronize = in.Synchronize
-	out.OrphanDownstreamOnPolicyDelete = in.OrphanDownstreamOnPolicyDelete
-	out.RawData = (*apiextensionsv1.JSON)(unsafe.Pointer(in.RawData))
-	out.Clone = in.Clone
-	out.CloneList = in.CloneList
-	return nil
-}
-
-// Convert_v1_Generation_To_v2_Generation is an autogenerated conversion function.
-func Convert_v1_Generation_To_v2_Generation(in *v1.Generation, out *Generation, s conversion.Scope) error {
-	return autoConvert_v1_Generation_To_v2_Generation(in, out, s)
-}
-
-func autoConvert_v2_ImageVerification_To_v1_ImageVerification(in *ImageVerification, out *v1.ImageVerification, s conversion.Scope) error {
-	out.Type = v1.ImageVerificationType(in.Type)
-	out.ImageReferences = *(*[]string)(unsafe.Pointer(&in.ImageReferences))
-	out.SkipImageReferences = *(*[]string)(unsafe.Pointer(&in.SkipImageReferences))
-	out.Attestors = *(*[]v1.AttestorSet)(unsafe.Pointer(&in.Attestors))
-	if in.Attestations != nil {
-		in, out := &in.Attestations, &out.Attestations
-		*out = make([]v1.Attestation, len(*in))
-		for i := range *in {
-			if err := Convert_v2_Attestation_To_v1_Attestation(&(*in)[i], &(*out)[i], s); err != nil {
-				return err
-			}
+func autoConvert_v2_Deny_To_v1_Deny(in *Deny, out *v1.Deny, s conversion.Scope) error {
+	if in.RawAnyAllConditions != nil {
+		in, out := &in.RawAnyAllConditions, &out.RawAnyAllConditions
+		*out = new(apiextensionsv1.JSON)
+		if err := Convert_v2_AnyAllConditions_To_v1_JSON(*in, *out, s); err != nil {
+			return err
 		}
 	} else {
-		out.Attestations = nil
-	}
-	out.Repository = in.Repository
-	out.MutateDigest = in.MutateDigest
-	out.VerifyDigest = in.VerifyDigest
-	out.Required = in.Required
-	out.ImageRegistryCredentials = (*v1.ImageRegistryCredentials)(unsafe.Pointer(in.ImageRegistryCredentials))
-	out.UseCache = in.UseCache
-	return nil
-}
-
-// Convert_v2_ImageVerification_To_v1_ImageVerification is an autogenerated conversion function.
-func Convert_v2_ImageVerification_To_v1_ImageVerification(in *ImageVerification, out *v1.ImageVerification, s conversion.Scope) error {
-	return autoConvert_v2_ImageVerification_To_v1_ImageVerification(in, out, s)
-}
-
-func autoConvert_v1_ImageVerification_To_v2_ImageVerification(in *v1.ImageVerification, out *ImageVerification, s conversion.Scope) error {
-	out.Type = v1.ImageVerificationType(in.Type)
-	// WARNING: in.Image requires manual conversion: does not exist in peer-type
-	out.ImageReferences = *(*[]string)(unsafe.Pointer(&in.ImageReferences))
-	out.SkipImageReferences = *(*[]string)(unsafe.Pointer(&in.SkipImageReferences))
-	// WARNING: in.Key requires manual conversion: does not exist in peer-type
-	// WARNING: in.Roots requires manual conversion: does not exist in peer-type
-	// WARNING: in.Subject requires manual conversion: does not exist in peer-type
-	// WARNING: in.Issuer requires manual conversion: does not exist in peer-type
-	// WARNING: in.AdditionalExtensions requires manual conversion: does not exist in peer-type
-	out.Attestors = *(*[]v1.AttestorSet)(unsafe.Pointer(&in.Attestors))
-	if in.Attestations != nil {
-		in, out := &in.Attestations, &out.Attestations
-		*out = make([]Attestation, len(*in))
-		for i := range *in {
-			if err := Convert_v1_Attestation_To_v2_Attestation(&(*in)[i], &(*out)[i], s); err != nil {
-				return err
-			}
-		}
-	} else {
-		out.Attestations = nil
-	}
-	// WARNING: in.Annotations requires manual conversion: does not exist in peer-type
-	out.Repository = in.Repository
-	out.MutateDigest = in.MutateDigest
-	out.VerifyDigest = in.VerifyDigest
-	out.Required = in.Required
-	out.ImageRegistryCredentials = (*v1.ImageRegistryCredentials)(unsafe.Pointer(in.ImageRegistryCredentials))
-	out.UseCache = in.UseCache
-	return nil
-}
-
-func autoConvert_v2_MatchResources_To_v1_MatchResources(in *MatchResources, out *v1.MatchResources, s conversion.Scope) error {
-	if in.Any != nil {
-		in, out := &in.Any, &out.Any
-		*out = make(v1.ResourceFilters, len(*in))
-		for i := range *in {
-			if err := Convert_v2_ResourceFilter_To_v1_ResourceFilter(&(*in)[i], &(*out)[i], s); err != nil {
-				return err
-			}
-		}
-	} else {
-		out.Any = nil
-	}
-	if in.All != nil {
-		in, out := &in.All, &out.All
-		*out = make(v1.ResourceFilters, len(*in))
-		for i := range *in {
-			if err := Convert_v2_ResourceFilter_To_v1_ResourceFilter(&(*in)[i], &(*out)[i], s); err != nil {
-				return err
-			}
-		}
-	} else {
-		out.All = nil
+		out.RawAnyAllConditions = nil
 	}
 	return nil
 }
 
-// Convert_v2_MatchResources_To_v1_MatchResources is an autogenerated conversion function.
-func Convert_v2_MatchResources_To_v1_MatchResources(in *MatchResources, out *v1.MatchResources, s conversion.Scope) error {
-	return autoConvert_v2_MatchResources_To_v1_MatchResources(in, out, s)
+// Convert_v2_Deny_To_v1_Deny is an autogenerated conversion function.
+func Convert_v2_Deny_To_v1_Deny(in *Deny, out *v1.Deny, s conversion.Scope) error {
+	return autoConvert_v2_Deny_To_v1_Deny(in, out, s)
 }
 
-func autoConvert_v1_MatchResources_To_v2_MatchResources(in *v1.MatchResources, out *MatchResources, s conversion.Scope) error {
-	if in.Any != nil {
-		in, out := &in.Any, &out.Any
-		*out = make(ResourceFilters, len(*in))
-		for i := range *in {
-			if err := Convert_v1_ResourceFilter_To_v2_ResourceFilter(&(*in)[i], &(*out)[i], s); err != nil {
-				return err
-			}
+func autoConvert_v1_Deny_To_v2_Deny(in *v1.Deny, out *Deny, s conversion.Scope) error {
+	if in.RawAnyAllConditions != nil {
+		in, out := &in.RawAnyAllConditions, &out.RawAnyAllConditions
+		*out = new(AnyAllConditions)
+		if err := Convert_v1_JSON_To_v2_AnyAllConditions(*in, *out, s); err != nil {
+			return err
 		}
 	} else {
-		out.Any = nil
+		out.RawAnyAllConditions = nil
 	}
-	if in.All != nil {
-		in, out := &in.All, &out.All
-		*out = make(ResourceFilters, len(*in))
-		for i := range *in {
-			if err := Convert_v1_ResourceFilter_To_v2_ResourceFilter(&(*in)[i], &(*out)[i], s); err != nil {
-				return err
-			}
-		}
-	} else {
-		out.All = nil
-	}
-	// WARNING: in.UserInfo requires manual conversion: does not exist in peer-type
-	// WARNING: in.ResourceDescription requires manual conversion: does not exist in peer-type
 	return nil
 }
 
-func autoConvert_v2_Mutation_To_v1_Mutation(in *Mutation, out *v1.Mutation, s conversion.Scope) error {
-	// WARNING: in.MutateExistingOnPolicyUpdate requires manual conversion: does not exist in peer-type
-	if in.Targets != nil {
-		in, out := &in.Targets, &out.Targets
-		*out = make([]v1.TargetResourceSpec, len(*in))
-		for i := range *in {
-			if err := Convert_v2_TargetResourceSpec_To_v1_TargetResourceSpec(&(*in)[i], &(*out)[i], s); err != nil {
-				return err
-			}
-		}
-	} else {
-		out.Targets = nil
-	}
-	out.RawPatchStrategicMerge = (*apiextensionsv1.JSON)(unsafe.Pointer(in.RawPatchStrategicMerge))
-	out.PatchesJSON6902 = in.PatchesJSON6902
-	out.ForEachMutation = *(*[]v1.ForEachMutation)(unsafe.Pointer(&in.ForEachMutation))
-	return nil
-}
-
-func autoConvert_v1_Mutation_To_v2_Mutation(in *v1.Mutation, out *Mutation, s conversion.Scope) error {
-	if in.Targets != nil {
-		in, out := &in.Targets, &out.Targets
-		*out = make([]TargetResourceSpec, len(*in))
-		for i := range *in {
-			if err := Convert_v1_TargetResourceSpec_To_v2_TargetResourceSpec(&(*in)[i], &(*out)[i], s); err != nil {
-				return err
-			}
-		}
-	} else {
-		out.Targets = nil
-	}
-	out.RawPatchStrategicMerge = (*apiextensionsv1.JSON)(unsafe.Pointer(in.RawPatchStrategicMerge))
-	out.PatchesJSON6902 = in.PatchesJSON6902
-	out.ForEachMutation = *(*[]v1.ForEachMutation)(unsafe.Pointer(&in.ForEachMutation))
-	return nil
-}
-
-// Convert_v1_Mutation_To_v2_Mutation is an autogenerated conversion function.
-func Convert_v1_Mutation_To_v2_Mutation(in *v1.Mutation, out *Mutation, s conversion.Scope) error {
-	return autoConvert_v1_Mutation_To_v2_Mutation(in, out, s)
+// Convert_v1_Deny_To_v2_Deny is an autogenerated conversion function.
+func Convert_v1_Deny_To_v2_Deny(in *v1.Deny, out *Deny, s conversion.Scope) error {
+	return autoConvert_v1_Deny_To_v2_Deny(in, out, s)
 }
 
 func autoConvert_v2_Policy_To_v1_Policy(in *Policy, out *v1.Policy, s conversion.Scope) error {
@@ -629,34 +466,6 @@ func Convert_v1_PolicyList_To_v2_PolicyList(in *v1.PolicyList, out *PolicyList, 
 	return autoConvert_v1_PolicyList_To_v2_PolicyList(in, out, s)
 }
 
-func autoConvert_v2_ResourceDescription_To_v1_ResourceDescription(in *ResourceDescription, out *v1.ResourceDescription, s conversion.Scope) error {
-	out.Kinds = *(*[]string)(unsafe.Pointer(&in.Kinds))
-	out.Names = *(*[]string)(unsafe.Pointer(&in.Names))
-	out.Namespaces = *(*[]string)(unsafe.Pointer(&in.Namespaces))
-	out.Annotations = *(*map[string]string)(unsafe.Pointer(&in.Annotations))
-	out.Selector = (*metav1.LabelSelector)(unsafe.Pointer(in.Selector))
-	out.NamespaceSelector = (*metav1.LabelSelector)(unsafe.Pointer(in.NamespaceSelector))
-	out.Operations = *(*[]v1.AdmissionOperation)(unsafe.Pointer(&in.Operations))
-	return nil
-}
-
-// Convert_v2_ResourceDescription_To_v1_ResourceDescription is an autogenerated conversion function.
-func Convert_v2_ResourceDescription_To_v1_ResourceDescription(in *ResourceDescription, out *v1.ResourceDescription, s conversion.Scope) error {
-	return autoConvert_v2_ResourceDescription_To_v1_ResourceDescription(in, out, s)
-}
-
-func autoConvert_v1_ResourceDescription_To_v2_ResourceDescription(in *v1.ResourceDescription, out *ResourceDescription, s conversion.Scope) error {
-	out.Kinds = *(*[]string)(unsafe.Pointer(&in.Kinds))
-	// WARNING: in.Name requires manual conversion: does not exist in peer-type
-	out.Names = *(*[]string)(unsafe.Pointer(&in.Names))
-	out.Namespaces = *(*[]string)(unsafe.Pointer(&in.Namespaces))
-	out.Annotations = *(*map[string]string)(unsafe.Pointer(&in.Annotations))
-	out.Selector = (*metav1.LabelSelector)(unsafe.Pointer(in.Selector))
-	out.NamespaceSelector = (*metav1.LabelSelector)(unsafe.Pointer(in.NamespaceSelector))
-	out.Operations = *(*[]v1.AdmissionOperation)(unsafe.Pointer(&in.Operations))
-	return nil
-}
-
 func autoConvert_v2_ResourceFilter_To_v1_ResourceFilter(in *ResourceFilter, out *v1.ResourceFilter, s conversion.Scope) error {
 	out.UserInfo = in.UserInfo
 	if err := Convert_v2_ResourceDescription_To_v1_ResourceDescription(&in.ResourceDescription, &out.ResourceDescription, s); err != nil {
@@ -683,101 +492,142 @@ func Convert_v1_ResourceFilter_To_v2_ResourceFilter(in *v1.ResourceFilter, out *
 	return autoConvert_v1_ResourceFilter_To_v2_ResourceFilter(in, out, s)
 }
 
-func autoConvert_v2_Spec_To_v1_Spec(in *Spec, out *v1.Spec, s conversion.Scope) error {
-	if in.Rules != nil {
-		in, out := &in.Rules, &out.Rules
-		*out = make([]v1.Rule, len(*in))
+func autoConvert_v2_Rule_To_v1_Rule(in *Rule, out *v1.Rule, s conversion.Scope) error {
+	out.Name = in.Name
+	out.Context = *(*[]v1.ContextEntry)(unsafe.Pointer(&in.Context))
+	if err := Convert_v2_MatchResources_To_v1_MatchResources(&in.MatchResources, &out.MatchResources, s); err != nil {
+		return err
+	}
+	if err := Convert_v2_MatchResources_To_v1_MatchResources(&in.ExcludeResources, &out.ExcludeResources, s); err != nil {
+		return err
+	}
+	out.ImageExtractors = *(*v1.ImageExtractorConfigs)(unsafe.Pointer(&in.ImageExtractors))
+	if in.RawAnyAllConditions != nil {
+		in, out := &in.RawAnyAllConditions, &out.RawAnyAllConditions
+		*out = new(apiextensionsv1.JSON)
+		if err := Convert_v2_AnyAllConditions_To_v1_JSON(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.RawAnyAllConditions = nil
+	}
+	out.CELPreconditions = *(*[]v1alpha1.MatchCondition)(unsafe.Pointer(&in.CELPreconditions))
+	if err := Convert_v2_Mutation_To_v1_Mutation(&in.Mutation, &out.Mutation, s); err != nil {
+		return err
+	}
+	if err := Convert_v2_Validation_To_v1_Validation(&in.Validation, &out.Validation, s); err != nil {
+		return err
+	}
+	if err := Convert_v2_Generation_To_v1_Generation(&in.Generation, &out.Generation, s); err != nil {
+		return err
+	}
+	if in.VerifyImages != nil {
+		in, out := &in.VerifyImages, &out.VerifyImages
+		*out = make([]v1.ImageVerification, len(*in))
 		for i := range *in {
-			if err := Convert_v2_Rule_To_v1_Rule(&(*in)[i], &(*out)[i], s); err != nil {
+			if err := Convert_v2_ImageVerification_To_v1_ImageVerification(&(*in)[i], &(*out)[i], s); err != nil {
 				return err
 			}
 		}
 	} else {
-		out.Rules = nil
+		out.VerifyImages = nil
 	}
-	out.ApplyRules = (*v1.ApplyRulesType)(unsafe.Pointer(in.ApplyRules))
-	out.FailurePolicy = (*v1.FailurePolicyType)(unsafe.Pointer(in.FailurePolicy))
-	out.Admission = (*bool)(unsafe.Pointer(in.Admission))
-	out.Background = (*bool)(unsafe.Pointer(in.Background))
-	out.WebhookTimeoutSeconds = (*int32)(unsafe.Pointer(in.WebhookTimeoutSeconds))
-	out.UseServerSideApply = in.UseServerSideApply
-	out.WebhookConfiguration = (*v1.WebhookConfiguration)(unsafe.Pointer(in.WebhookConfiguration))
+	out.SkipBackgroundRequests = in.SkipBackgroundRequests
 	return nil
 }
 
-func autoConvert_v1_Spec_To_v2_Spec(in *v1.Spec, out *Spec, s conversion.Scope) error {
-	if in.Rules != nil {
-		in, out := &in.Rules, &out.Rules
-		*out = make([]Rule, len(*in))
+// Convert_v2_Rule_To_v1_Rule is an autogenerated conversion function.
+func Convert_v2_Rule_To_v1_Rule(in *Rule, out *v1.Rule, s conversion.Scope) error {
+	return autoConvert_v2_Rule_To_v1_Rule(in, out, s)
+}
+
+func autoConvert_v1_Rule_To_v2_Rule(in *v1.Rule, out *Rule, s conversion.Scope) error {
+	out.Name = in.Name
+	out.Context = *(*[]v1.ContextEntry)(unsafe.Pointer(&in.Context))
+	if err := Convert_v1_MatchResources_To_v2_MatchResources(&in.MatchResources, &out.MatchResources, s); err != nil {
+		return err
+	}
+	if err := Convert_v1_MatchResources_To_v2_MatchResources(&in.ExcludeResources, &out.ExcludeResources, s); err != nil {
+		return err
+	}
+	out.ImageExtractors = *(*v1.ImageExtractorConfigs)(unsafe.Pointer(&in.ImageExtractors))
+	if in.RawAnyAllConditions != nil {
+		in, out := &in.RawAnyAllConditions, &out.RawAnyAllConditions
+		*out = new(AnyAllConditions)
+		if err := Convert_v1_JSON_To_v2_AnyAllConditions(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.RawAnyAllConditions = nil
+	}
+	out.CELPreconditions = *(*[]admissionregistrationv1.MatchCondition)(unsafe.Pointer(&in.CELPreconditions))
+	if err := Convert_v1_Mutation_To_v2_Mutation(&in.Mutation, &out.Mutation, s); err != nil {
+		return err
+	}
+	if err := Convert_v1_Validation_To_v2_Validation(&in.Validation, &out.Validation, s); err != nil {
+		return err
+	}
+	if err := Convert_v1_Generation_To_v2_Generation(&in.Generation, &out.Generation, s); err != nil {
+		return err
+	}
+	if in.VerifyImages != nil {
+		in, out := &in.VerifyImages, &out.VerifyImages
+		*out = make([]ImageVerification, len(*in))
 		for i := range *in {
-			if err := Convert_v1_Rule_To_v2_Rule(&(*in)[i], &(*out)[i], s); err != nil {
+			if err := Convert_v1_ImageVerification_To_v2_ImageVerification(&(*in)[i], &(*out)[i], s); err != nil {
 				return err
 			}
 		}
 	} else {
-		out.Rules = nil
+		out.VerifyImages = nil
 	}
-	out.ApplyRules = (*v1.ApplyRulesType)(unsafe.Pointer(in.ApplyRules))
-	out.FailurePolicy = (*v1.FailurePolicyType)(unsafe.Pointer(in.FailurePolicy))
-	// WARNING: in.ValidationFailureAction requires manual conversion: does not exist in peer-type
-	// WARNING: in.ValidationFailureActionOverrides requires manual conversion: does not exist in peer-type
-	out.Admission = (*bool)(unsafe.Pointer(in.Admission))
-	out.Background = (*bool)(unsafe.Pointer(in.Background))
-	// WARNING: in.SchemaValidation requires manual conversion: does not exist in peer-type
-	out.WebhookTimeoutSeconds = (*int32)(unsafe.Pointer(in.WebhookTimeoutSeconds))
-	// WARNING: in.MutateExistingOnPolicyUpdate requires manual conversion: does not exist in peer-type
-	// WARNING: in.GenerateExistingOnPolicyUpdate requires manual conversion: does not exist in peer-type
-	// WARNING: in.GenerateExisting requires manual conversion: does not exist in peer-type
-	out.UseServerSideApply = in.UseServerSideApply
-	out.WebhookConfiguration = (*WebhookConfiguration)(unsafe.Pointer(in.WebhookConfiguration))
+	out.SkipBackgroundRequests = in.SkipBackgroundRequests
 	return nil
 }
 
-func autoConvert_v2_Validation_To_v1_Validation(in *Validation, out *v1.Validation, s conversion.Scope) error {
-	// WARNING: in.ValidationFailureAction requires manual conversion: does not exist in peer-type
-	// WARNING: in.ValidationFailureActionOverrides requires manual conversion: does not exist in peer-type
-	out.Message = in.Message
-	out.Manifests = (*v1.Manifests)(unsafe.Pointer(in.Manifests))
-	out.ForEachValidation = *(*[]v1.ForEachValidation)(unsafe.Pointer(&in.ForEachValidation))
-	out.RawPattern = (*apiextensionsv1.JSON)(unsafe.Pointer(in.RawPattern))
-	out.RawAnyPattern = (*apiextensionsv1.JSON)(unsafe.Pointer(in.RawAnyPattern))
-	if in.Deny != nil {
-		in, out := &in.Deny, &out.Deny
-		*out = new(v1.Deny)
-		if err := Convert_v2_Deny_To_v1_Deny(*in, *out, s); err != nil {
+// Convert_v1_Rule_To_v2_Rule is an autogenerated conversion function.
+func Convert_v1_Rule_To_v2_Rule(in *v1.Rule, out *Rule, s conversion.Scope) error {
+	return autoConvert_v1_Rule_To_v2_Rule(in, out, s)
+}
+
+func autoConvert_v2_TargetResourceSpec_To_v1_TargetResourceSpec(in *TargetResourceSpec, out *v1.TargetResourceSpec, s conversion.Scope) error {
+	out.ResourceSpec = in.ResourceSpec
+	out.Context = *(*[]v1.ContextEntry)(unsafe.Pointer(&in.Context))
+	if in.RawAnyAllConditions != nil {
+		in, out := &in.RawAnyAllConditions, &out.RawAnyAllConditions
+		*out = new(apiextensionsv1.JSON)
+		if err := Convert_v2_AnyAllConditions_To_v1_JSON(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
-		out.Deny = nil
+		out.RawAnyAllConditions = nil
 	}
-	out.PodSecurity = (*v1.PodSecurity)(unsafe.Pointer(in.PodSecurity))
-	out.CEL = (*v1.CEL)(unsafe.Pointer(in.CEL))
 	return nil
 }
 
-func autoConvert_v1_Validation_To_v2_Validation(in *v1.Validation, out *Validation, s conversion.Scope) error {
-	out.Message = in.Message
-	out.Manifests = (*v1.Manifests)(unsafe.Pointer(in.Manifests))
-	out.ForEachValidation = *(*[]v1.ForEachValidation)(unsafe.Pointer(&in.ForEachValidation))
-	out.RawPattern = (*apiextensionsv1.JSON)(unsafe.Pointer(in.RawPattern))
-	out.RawAnyPattern = (*apiextensionsv1.JSON)(unsafe.Pointer(in.RawAnyPattern))
-	if in.Deny != nil {
-		in, out := &in.Deny, &out.Deny
-		*out = new(Deny)
-		if err := Convert_v1_Deny_To_v2_Deny(*in, *out, s); err != nil {
+// Convert_v2_TargetResourceSpec_To_v1_TargetResourceSpec is an autogenerated conversion function.
+func Convert_v2_TargetResourceSpec_To_v1_TargetResourceSpec(in *TargetResourceSpec, out *v1.TargetResourceSpec, s conversion.Scope) error {
+	return autoConvert_v2_TargetResourceSpec_To_v1_TargetResourceSpec(in, out, s)
+}
+
+func autoConvert_v1_TargetResourceSpec_To_v2_TargetResourceSpec(in *v1.TargetResourceSpec, out *TargetResourceSpec, s conversion.Scope) error {
+	out.ResourceSpec = in.ResourceSpec
+	out.Context = *(*[]v1.ContextEntry)(unsafe.Pointer(&in.Context))
+	if in.RawAnyAllConditions != nil {
+		in, out := &in.RawAnyAllConditions, &out.RawAnyAllConditions
+		*out = new(AnyAllConditions)
+		if err := Convert_v1_JSON_To_v2_AnyAllConditions(*in, *out, s); err != nil {
 			return err
 		}
 	} else {
-		out.Deny = nil
+		out.RawAnyAllConditions = nil
 	}
-	out.PodSecurity = (*v1.PodSecurity)(unsafe.Pointer(in.PodSecurity))
-	out.CEL = (*v1.CEL)(unsafe.Pointer(in.CEL))
 	return nil
 }
 
-// Convert_v1_Validation_To_v2_Validation is an autogenerated conversion function.
-func Convert_v1_Validation_To_v2_Validation(in *v1.Validation, out *Validation, s conversion.Scope) error {
-	return autoConvert_v1_Validation_To_v2_Validation(in, out, s)
+// Convert_v1_TargetResourceSpec_To_v2_TargetResourceSpec is an autogenerated conversion function.
+func Convert_v1_TargetResourceSpec_To_v2_TargetResourceSpec(in *v1.TargetResourceSpec, out *TargetResourceSpec, s conversion.Scope) error {
+	return autoConvert_v1_TargetResourceSpec_To_v2_TargetResourceSpec(in, out, s)
 }
 
 func autoConvert_v2_WebhookConfiguration_To_v1_WebhookConfiguration(in *WebhookConfiguration, out *v1.WebhookConfiguration, s conversion.Scope) error {

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"crypto/tls"
 	"errors"
 	"flag"
@@ -18,7 +17,6 @@ import (
 	"github.com/kyverno/kyverno/pkg/controllers/certmanager"
 	conversionwebhook "github.com/kyverno/kyverno/pkg/controllers/crd-conversion-webhook"
 	"github.com/kyverno/kyverno/pkg/informers"
-	"github.com/kyverno/kyverno/pkg/leaderelection"
 	tlsutils "github.com/kyverno/kyverno/pkg/tls"
 	kubeutils "github.com/kyverno/kyverno/pkg/utils/kube"
 	corev1 "k8s.io/api/core/v1"
@@ -104,75 +102,46 @@ func main() {
 	if !internal.StartInformersAndWaitForCacheSync(ctx, setup.Logger, kubeInformer, kyvernoInformer) {
 		os.Exit(1)
 	}
-	// setup leader election
-	le, err := leaderelection.New(
-		setup.Logger.WithName("leader-election"),
-		"kyverno-crd-conversion-controller",
+	// controllers
+	renewer := tlsutils.NewCertRenewer(
+		setup.KubeClient.CoreV1().Secrets(config.KyvernoNamespace()),
+		tlsutils.CertRenewalInterval,
+		tlsutils.CAValidityDuration,
+		tlsutils.TLSValidityDuration,
+		renewBefore,
+		serverIP,
+		config.KyvernoServiceName(),
+		config.DnsNames(config.KyvernoServiceName(), config.KyvernoNamespace()),
 		config.KyvernoNamespace(),
-		setup.LeaderElectionClient,
-		config.KyvernoPodName(),
-		internal.LeaderElectionRetryPeriod(),
-		func(ctx context.Context) {
-			logger := setup.Logger.WithName("leader")
-			// informer factories
-			kubeInformer := kubeinformers.NewSharedInformerFactoryWithOptions(setup.KubeClient, resyncPeriod)
-			kyvernoInformer := kyvernoinformer.NewSharedInformerFactory(setup.KyvernoClient, resyncPeriod)
-
-			// controllers
-			renewer := tlsutils.NewCertRenewer(
-				setup.KubeClient.CoreV1().Secrets(config.KyvernoNamespace()),
-				tlsutils.CertRenewalInterval,
-				tlsutils.CAValidityDuration,
-				tlsutils.TLSValidityDuration,
-				renewBefore,
-				serverIP,
-				config.KyvernoServiceName(),
-				config.DnsNames(config.KyvernoServiceName(), config.KyvernoNamespace()),
-				config.KyvernoNamespace(),
-				caSecretName,
-				tlsSecretName,
-			)
-			certController := internal.NewController(
-				certmanager.ControllerName,
-				certmanager.NewController(
-					caSecret,
-					tlsSecret,
-					renewer,
-					caSecretName,
-					tlsSecretName,
-					config.KyvernoNamespace(),
-				),
-				certmanager.Workers,
-			)
-			crdConversionWebhookController := internal.NewController(
-				conversionwebhook.ControllerName,
-				conversionwebhook.NewController(
-					setup.ApiServerClient,
-					kubeInformer.Core().V1().Secrets(),
-					caSecretName,
-					serverIP,
-					int32(servicePort),
-					config.CrdConversionWebhookServicePath,
-				),
-				conversionwebhook.Workers,
-			)
-			// start informers and wait for cache sync
-			if !internal.StartInformersAndWaitForCacheSync(ctx, logger, kyvernoInformer, kubeInformer) {
-				logger.Error(errors.New("failed to wait for cache sync"), "failed to wait for cache sync")
-				os.Exit(1)
-			}
-			// start leader controllers
-			var wg sync.WaitGroup
-			certController.Run(ctx, logger, &wg)
-			crdConversionWebhookController.Run(ctx, logger, &wg)
-			wg.Wait()
-		},
-		nil,
+		caSecretName,
+		tlsSecretName,
 	)
-	if err != nil {
-		setup.Logger.Error(err, "failed to initialize leader election")
-		os.Exit(1)
-	}
+	certController := internal.NewController(
+		certmanager.ControllerName,
+		certmanager.NewController(
+			caSecret,
+			tlsSecret,
+			renewer,
+			caSecretName,
+			tlsSecretName,
+			config.KyvernoNamespace(),
+		),
+		certmanager.Workers,
+	)
+	crdConversionWebhookController := internal.NewController(
+		conversionwebhook.ControllerName,
+		conversionwebhook.NewController(
+			setup.ApiServerClient,
+			kubeInformer.Core().V1().Secrets(),
+			caSecretName,
+			serverIP,
+			int32(servicePort),
+			config.CrdConversionWebhookServicePath,
+		),
+		conversionwebhook.Workers,
+	)
+	certController.Run(ctx, setup.Logger, &wg)
+	crdConversionWebhookController.Run(ctx, setup.Logger, &wg)
 	// create server
 	var tlsOptions []func(config *tls.Config)
 	tlsOptions = append(tlsOptions, func(cfg *tls.Config) {
@@ -204,8 +173,7 @@ func main() {
 	})
 
 	webhookServer := webhook.NewServer(webhook.Options{
-		Port: webhookServerPort,
-		// CertDir: "/tmp/k8s-webhook-server/serving-certs",
+		Port:    webhookServerPort,
 		TLSOpts: tlsOptions,
 	})
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
@@ -253,8 +221,6 @@ func main() {
 		setup.Logger.Error(err, "problem running manager")
 		os.Exit(1)
 	}
-	// start leader election
-	le.Run(ctx)
 	// wait for everything to shut down and exit
 	wg.Wait()
 }

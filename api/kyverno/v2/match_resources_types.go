@@ -5,6 +5,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation/field"
 )
 
+// +k8s:conversion-gen=false
 // MatchResources is used to specify resource and admission review request data for
 // which a policy rule is applicable.
 type MatchResources struct {

@@ -128,6 +128,9 @@ func (c *controller) reconcile(ctx context.Context, logger logr.Logger, key, nam
 		crd.Spec.Conversion = conversionwebhook
 		return nil
 	})
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

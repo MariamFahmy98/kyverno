@@ -10,6 +10,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation/field"
 )
 
+// +k8s:conversion-gen=false
 // ResourceDescription contains criteria used to match resources.
 type ResourceDescription struct {
 	// Kinds is a list of resource kinds.

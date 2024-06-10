@@ -19,6 +19,7 @@ type WebhookConfiguration struct {
 	MatchConditions []admissionregistrationv1.MatchCondition `json:"matchConditions,omitempty" yaml:"matchConditions,omitempty"`
 }
 
+// +k8s:conversion-gen=false
 // Validation defines checks to be performed on matching resources.
 type Validation struct {
 	// ValidationFailureAction defines if a validation policy rule violation should block
@@ -164,6 +165,7 @@ type AnyAllConditions struct {
 	AllConditions []Condition `json:"all,omitempty" yaml:"all,omitempty"`
 }
 
+// +k8s:conversion-gen=false
 // Mutation defines how resource are modified.
 type Mutation struct {
 	// MutateExistingOnPolicyUpdate controls if a mutateExisting policy is applied on policy events.
@@ -207,6 +209,7 @@ type TargetResourceSpec struct {
 	RawAnyAllConditions *AnyAllConditions `json:"preconditions,omitempty" yaml:"preconditions,omitempty"`
 }
 
+// +k8s:conversion-gen=false
 // Generation defines how new resources should be created and managed.
 type Generation struct {
 	// ResourceSpec contains information to select the resource.

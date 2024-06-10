@@ -5,6 +5,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation/field"
 )
 
+// +k8s:conversion-gen=false
 // ImageVerification validates that images that match the specified pattern
 // are signed with the supplied public key. Once the image is verified it is
 // mutated to include the SHA digest retrieved during the registration.
@@ -108,6 +109,7 @@ func (iv *ImageVerification) Validate(isAuditFailureAction bool, path *field.Pat
 	return errs
 }
 
+// +k8s:conversion-gen=false
 // Attestation are checks for signed in-toto Statements that are used to verify the image.
 // See https://github.com/in-toto/attestation. Kyverno fetches signed attestations from the
 // OCI registry and decodes them into a list of Statements.
