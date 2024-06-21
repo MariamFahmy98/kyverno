@@ -75,6 +75,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       packages: read
+      repository-projects: read
     strategy:
       fail-fast: false
       matrix:
@@ -170,6 +171,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       packages: read
+      repository-projects: read
     strategy:
       fail-fast: false
       matrix:
@@ -239,6 +241,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       packages: read
+      repository-projects: read
     strategy:
       fail-fast: false
       matrix:
@@ -311,6 +314,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       packages: read
+      repository-projects: read
     strategy:
       fail-fast: false
       matrix:
@@ -382,6 +386,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       packages: read
+      repository-projects: read
     strategy:
       fail-fast: false
       matrix:
@@ -453,6 +458,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       packages: read
+      repository-projects: read
     strategy:
       fail-fast: false
       matrix:
@@ -529,6 +535,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       packages: read
+      repository-projects: read
     strategy:
       fail-fast: false
       matrix:
@@ -604,6 +611,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       packages: read
+      repository-projects: read
     strategy:
       fail-fast: false
       matrix:
@@ -699,6 +707,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       packages: read
+      repository-projects: read
     strategy:
       fail-fast: false
       matrix:
@@ -895,6 +904,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       packages: read
+      repository-projects: read
     needs: prepare-images
     steps:
       - name: Checkout
@@ -946,6 +956,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       packages: read
+      repository-projects: read
     strategy:
       fail-fast: false
       matrix:
