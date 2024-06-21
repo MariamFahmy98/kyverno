@@ -137,6 +137,11 @@ jobs:
 
   generate-kyverno-provenance:
     needs: publish-images
+    permissions:
+      repository-projects: read
+      id-token: write   # To sign the provenance.
+      packages: write   # To upload assets to release.
+      actions: read     # To read the workflow path.
     # NOTE: The container generator workflow is not officially released as GA.
     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v2.0.0
     with:
@@ -148,6 +153,11 @@ jobs:
 
   generate-kyverno-init-provenance:
     needs: publish-images
+    permissions:
+      repository-projects: read
+      id-token: write   # To sign the provenance.
+      packages: write   # To upload assets to release.
+      actions: read     # To read the workflow path.
     # NOTE: The container generator workflow is not officially released as GA.
     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v2.0.0
     with:
@@ -159,6 +169,11 @@ jobs:
 
   generate-background-controller-provenance:
     needs: publish-images
+    permissions:
+      repository-projects: read
+      id-token: write   # To sign the provenance.
+      packages: write   # To upload assets to release.
+      actions: read     # To read the workflow path.
     # NOTE: The container generator workflow is not officially released as GA.
     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v2.0.0
     with:
@@ -170,6 +185,11 @@ jobs:
 
   generate-cleanup-controller-provenance:
     needs: publish-images
+    permissions:
+      repository-projects: read
+      id-token: write   # To sign the provenance.
+      packages: write   # To upload assets to release.
+      actions: read     # To read the workflow path.
     # NOTE: The container generator workflow is not officially released as GA.
     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v2.0.0
     with:
@@ -181,6 +201,11 @@ jobs:
 
   generate-kyverno-cli-provenance:
     needs: publish-images
+    permissions:
+      repository-projects: read
+      id-token: write   # To sign the provenance.
+      packages: write   # To upload assets to release.
+      actions: read     # To read the workflow path.
     # NOTE: The container generator workflow is not officially released as GA.
     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v2.0.0
     with:
@@ -192,6 +217,11 @@ jobs:
 
   generate-reports-controller-provenance:
     needs: publish-images
+    permissions:
+      repository-projects: read
+      id-token: write   # To sign the provenance.
+      packages: write   # To upload assets to release.
+      actions: read     # To read the workflow path.
     # NOTE: The container generator workflow is not officially released as GA.
     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v2.0.0
     with:
