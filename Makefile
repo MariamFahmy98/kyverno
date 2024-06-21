@@ -6,7 +6,7 @@
 
 GIT_SHA              := $(shell git rev-parse HEAD)
 REGISTRY             ?= ghcr.io
-REPO                 ?= kyverno
+REPO                 ?= enterprise-kyverno
 KIND_IMAGE           ?= kindest/node:v1.29.1
 KIND_NAME            ?= kind
 KIND_CONFIG          ?= default
