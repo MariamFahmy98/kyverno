@@ -50,7 +50,7 @@ jobs:
           registry: ghcr.io
           registry-username: ${{ github.actor }}
           registry-password: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository_owner }}
+          repository: ${{ github.repository }}
           version: ${{ github.ref_name }}
           sign-image: true
           sbom-name: kyverno
