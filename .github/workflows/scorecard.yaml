@@ -2,8 +2,6 @@
 
 name: Scorecards supply-chain security
 
-permissions: {}
-
 on:
   schedule:
     - cron: '30 1 * * 6'

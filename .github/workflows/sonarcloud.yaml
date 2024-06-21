@@ -2,8 +2,6 @@
 
 name: Sonarcloud workflow
 
-permissions: {}
-
 on:
   push:
     branches:

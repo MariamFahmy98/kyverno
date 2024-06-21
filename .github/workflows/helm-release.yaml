@@ -2,8 +2,6 @@
 
 name: helm-release
 
-permissions: {}
-
 on:
   push:
     tags:

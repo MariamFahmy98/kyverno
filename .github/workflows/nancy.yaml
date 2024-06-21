@@ -2,8 +2,6 @@
 
 name: Nancy
 
-permissions: {}
-
 on:
   push:
     branches:

@@ -2,8 +2,6 @@
 
 name: Build devcontainer
 
-permissions: {}
-
 on:
   pull_request:
     branches:

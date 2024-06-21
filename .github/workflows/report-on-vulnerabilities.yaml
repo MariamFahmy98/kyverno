@@ -2,8 +2,6 @@
 
 name: report-on-vulnerabilities
 
-permissions: {}
-
 on:
   workflow_dispatch: {}
   schedule:

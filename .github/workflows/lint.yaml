@@ -2,8 +2,6 @@
 
 name: Lint
 
-permissions: {}
-
 on:
   push:
     branches:

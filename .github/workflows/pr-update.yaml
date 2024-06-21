@@ -2,8 +2,6 @@
 
 name: PR update
 
-permissions: {}
-
 on:
   push:
     branches:

@@ -2,8 +2,6 @@
 
 name: Check actions
 
-permissions: {}
-
 on:
   push:
     branches:

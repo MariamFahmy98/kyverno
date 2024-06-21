@@ -2,8 +2,6 @@
 
 name: helm-test
 
-permissions: {}
-
 on:
   pull_request:
     branches:

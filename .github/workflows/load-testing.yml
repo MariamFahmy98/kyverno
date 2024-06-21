@@ -42,9 +42,6 @@ jobs:
 
   load-test:
     runs-on: ubuntu-latest
-    permissions:
-      packages: read
-      repository-projects: read
     strategy:
       fail-fast: false
       matrix:

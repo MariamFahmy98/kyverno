@@ -2,8 +2,6 @@
 
 name: Verify codegen
 
-permissions: {}
-
 on:
   push:
     branches:
