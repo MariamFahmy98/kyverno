@@ -323,7 +323,7 @@ ko-build-all: ko-build-kyverno-init ko-build-kyverno ko-build-cli ko-build-clean
 ################
 
 REGISTRY_USERNAME   ?= dummy
-PLATFORMS           := all
+PLATFORMS           := linux/arm64
 
 .PHONY: ko-login
 ko-login: $(KO)
