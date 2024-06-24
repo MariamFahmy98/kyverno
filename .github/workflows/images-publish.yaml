@@ -142,7 +142,7 @@ jobs:
   generate-kyverno-provenance:
     needs: publish-images
     permissions:
-      repository-projects: read
+      contents: read
       id-token: write   # To sign the provenance.
       packages: write   # To upload assets to release.
       actions: read     # To read the workflow path.
