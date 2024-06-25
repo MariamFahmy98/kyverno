@@ -11,8 +11,9 @@ jobs:
   release-images:
     runs-on: ubuntu-latest
     permissions:
-      packages: write
+      contents: read
       id-token: write
+      packages: write
     outputs:
       kyverno-digest: ${{ steps.release-kyverno.outputs.digest }}
       kyverno-init-digest: ${{ steps.release-kyverno-init.outputs.digest }}
