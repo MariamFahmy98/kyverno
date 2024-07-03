@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	imageRef = "jimnotarytest.azurecr.io/jim/net-monitor:v1"
+	imageRef = "ghcr.io/nirmata/test-verify-image-private:signed"
 	ctx      = context.Background()
 )
 

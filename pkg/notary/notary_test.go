@@ -35,7 +35,7 @@ uOKpF5rWAruB5PCIrquamOejpXV9aQA/K2JQDuc0mcKz
 )
 
 func TestExtractStatements(t *testing.T) {
-	imageRef := "jimnotarytest.azurecr.io/jim/net-monitor:v1"
+	imageRef := "ghcr.io/nirmata/test-verify-image-private:signed"
 	ref, err := name.ParseReference(imageRef)
 	assert.NilError(t, err)
 	repoDesc, err := remote.Head(ref)
@@ -58,7 +58,7 @@ func TestExtractStatements(t *testing.T) {
 
 func TestNotaryImageVerification(t *testing.T) {
 	opts := images.Options{
-		ImageRef: "ghcr.io/kyverno/test-verify-image:signed",
+		ImageRef: "ghcr.io/nirmata/test-verify-image-private:signed",
 		Cert:     cert,
 	}
 
