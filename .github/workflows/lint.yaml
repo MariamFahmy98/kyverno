@@ -43,3 +43,4 @@ jobs:
         run: make unused-package-check
       - name: Go vet
         run: make vet
+
