@@ -1,6 +1,6 @@
 module github.com/kyverno/kyverno
 
-go 1.21.4
+go 1.22.5
 
 require (
 	github.com/AdaLogics/go-fuzz-headers v0.0.0-20230811130428-ced1acdcaa24
@@ -92,7 +92,7 @@ require (
 	sigs.k8s.io/yaml v1.4.0
 )
 
-require github.com/alitto/pond v1.8.3 // indirect
+require github.com/alitto/pond v1.8.3
 
 require (
 	github.com/go-jose/go-jose/v4 v4.0.1 // indirect
